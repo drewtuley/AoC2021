@@ -1,8 +1,8 @@
 from statistics import mode, mean, median
 
 # calculate sum of arithmetic progression
-# starting at 'a' with d being the constant difference
-# between values having n vales in the progression
+# starting at 'a' with 'd' being the constant difference
+# between values having 'n' values in the progression
 def sum_of_arithmetic_progression(a, d, n):
     return int((n / 2) * (2 * a + (n - 1) * d))
 
