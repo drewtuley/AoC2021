@@ -1,3 +1,6 @@
+import sys
+
+
 class Board(object):
     rows = []
     index = 0
@@ -44,23 +47,25 @@ class Board(object):
         return unused
 
 
-if __name__ == '__main__':
-    with open('day_04_input.txt') as fd:
+def day_04(input_file):
+    with open(input_file) as fd:
         random_sequence = []
         boards = []
-        currentBoard = Board()
+        current_board = Board()
 
         for rl in fd:
             if len(random_sequence) == 0:
                 random_sequence = [int(c) for c in rl.strip().split(',')]
-                print(random_sequence)
+                # print(random_sequence)
             elif len(rl.strip()) > 0:
                 vals = [int(v) for v in rl.strip().replace('  ', ' ').split(' ')]
-                currentBoard.add_row(vals)
-                if currentBoard.is_complete():
-                    boards.append(currentBoard)
-                    currentBoard = Board()
+                current_board.add_row(vals)
+                if current_board.is_complete():
+                    boards.append(current_board)
+                    current_board = Board()
 
+        first_win_value = None
+        last_win_value = None
         for number in random_sequence:
             for bx, board in enumerate(boards):
                 if not board.has_won():
@@ -68,4 +73,20 @@ if __name__ == '__main__':
                     if board.is_winner():
                         board.mark_won()
                         unused_vals = board.get_unused_vals()
-                        print(f'Board:{bx} = value = {sum(unused_vals) * number}')
+                        # print(f'Board:{bx} = value = {sum(unused_vals) * number}')
+                        if first_win_value is None:
+                            first_win_value = sum(unused_vals) * number
+                        last_win_value = sum(unused_vals) * number
+
+        return first_win_value, last_win_value
+
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] == 'test':
+        first, last = day_04('day_04_sample.txt')
+        assert first == 4512
+        assert last == 1924
+        print('Pass tests')
+    else:
+        first, last = day_04('day_04_input.txt')
+        print(f'First Win: {first}, Last Win: {last}')
