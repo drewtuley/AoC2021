@@ -108,9 +108,8 @@ def set_exclusive(matrix, unknown, param):
 def determine_digit(matrix, output):
     segments = set()
     for o in output:
-        for s in matrix:
-            if s.is_single_val(o):
-                segments.add(s.get_index())
+        idx = matrix[o]
+        segments.add(idx)
 
     for d in DIGITS:
         if DIGITS[d] == list(segments):
@@ -123,7 +122,7 @@ def day_08_p2(param):
         for rl in fd:
             signals = {2: [], 3: [], 4: [], 5: [], 6: [], 7: []}
             matrix = [Segment(x) for x in range(7)]
-            r_signal, r_output = rl.strip().split('|')
+            r_signal, r_output = rl.strip().split(' | ')
             for s in r_signal.replace('  ', ' ').split(' '):
                 if len(s) > 0:
                     signals[len(s)].append(s)
@@ -151,8 +150,9 @@ def day_08_p2(param):
                             set_exclusive(matrix, unknown, 4)
             # print(matrix)
             display = 0
+            lookup_matrix = dict((list(matrix[key].get_vals())[0], key) for key in range(7))
             for output in outputs:
-                d = determine_digit(matrix, output)
+                d = determine_digit(lookup_matrix, output)
                 if d is not None:
                     display *= 10
                     display += int(d)
